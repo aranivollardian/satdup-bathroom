@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bathroom and laundry shopping checklist</title>
+<style>
+  :root{--teal:#1A9E8F;--ink:#111;--body:#333;--muted:#777;--line:#e6e6e6;--card:#F5F5F5;--bg:#fff}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--body);font:15px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}
+  .wrap{max-width:760px;margin:0 auto;padding:20px 16px 60px}
+  h1{color:var(--ink);font-size:22px;margin:0 0 4px}
+  .sub{color:var(--muted);font-size:13px;margin:0 0 16px}
+  .tabs{display:flex;gap:8px;margin-bottom:14px}
+  .tab{flex:1;border:1px solid var(--line);background:#fff;border-radius:10px;padding:10px;font-weight:600;color:var(--ink);cursor:pointer;font-size:15px}
+  .tab.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .prog{background:var(--card);border-radius:12px;padding:12px 14px;margin-bottom:12px}
+  .prog .num{font-size:26px;font-weight:700;color:var(--teal)}
+  .bar{height:8px;background:#ddd;border-radius:4px;overflow:hidden;margin-top:6px}
+  .bar i{display:block;height:100%;background:var(--teal);width:0;transition:width .25s}
+  .note{font-size:13px;margin-top:8px}
+  .alert{background:#fff4e0;color:#6b4500;border-radius:12px;padding:10px 14px;font-size:13px;margin-bottom:8px}
+  .alert b{color:#4d3200}
+  h2{font-size:13px;letter-spacing:.04em;text-transform:uppercase;color:var(--teal);margin:22px 0 8px;display:flex;justify-content:space-between;gap:8px}
+  h2 span{color:var(--muted);font-weight:500}
+  .item{display:flex;gap:12px;padding:12px 2px;border-bottom:1px solid var(--line)}
+  .item input{appearance:none;-webkit-appearance:none;flex:0 0 22px;height:22px;border:2px solid #bbb;border-radius:6px;margin-top:1px;cursor:pointer;display:grid;place-items:center}
+  .item input:checked{background:var(--teal);border-color:var(--teal)}
+  .item input:checked::after{content:"";width:6px;height:11px;border:solid #fff;border-width:0 2.5px 2.5px 0;transform:rotate(45deg) translate(-1px,-1px)}
+  .main{flex:1;min-width:0}
+  .t{font-weight:600;color:var(--ink)}
+  .item.done .t,.item.done .p{text-decoration:line-through;color:var(--muted)}
+  .p{margin-top:2px}
+  .meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+  .chip{font-size:12px;background:var(--card);border-radius:20px;padding:2px 9px}
+  .chip.flag{background:#fff4e0;color:#8a5a00}
+  .buy{margin-top:8px;display:grid;gap:6px}
+  .buy a{display:flex;justify-content:space-between;gap:10px;align-items:center;border:1px solid var(--line);border-radius:10px;padding:8px 10px;text-decoration:none;color:var(--ink);font-size:13px}
+  .buy a .k{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--teal);font-weight:700;display:block}
+  .buy a .pr{font-weight:700;color:var(--teal);white-space:nowrap}
+  .n{font-size:13px;color:var(--muted);margin-top:6px}
+  .big{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+  .big div{background:var(--card);border-radius:12px;padding:12px 14px}
+  .big b{display:block;font-size:22px;color:var(--teal)}
+  .big span{font-size:12px;color:var(--muted)}
+  table.bt{width:100%;border-collapse:collapse;font-size:14px}
+  table.bt td{padding:8px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+  table.bt td:last-child{text-align:right;white-space:nowrap;font-weight:600;color:var(--ink)}
+  table.bt tr.sub td{background:var(--card);font-weight:700;color:var(--ink)}
+  table.bt small{display:block;color:var(--muted);font-size:12px;font-weight:400}
+  .foot{margin-top:24px;display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--muted);gap:10px}
+  .foot button{border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 10px;cursor:pointer;color:var(--body)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Reno shopping checklist</h1>
+  <p class="sub">67 Market St, Randwick. Builder: Luke's Renovations, starting 25 Jan 2027. Prices checked 14 Nov 2026 and include GST. Confirm at checkout.</p>
+
+  <div class="tabs">
+    <button class="tab on" data-room="bathroom">Bathroom</button>
+    <button class="tab" data-room="laundry">Laundry</button>
+    <button class="tab" data-room="budget">Budget</button>
+  </div>
+
+  <div id="chk">
+  <div class="prog">
+    <div><span class="num" id="count">0 of 0</span> done</div>
+    <div class="bar"><i id="fill"></i></div>
+    <div class="note">Deadline: everything on site before you leave on 26 Dec.</div>
+  </div>
+  <div class="alert"><b>Order the vanity and mirror cabinet this week.</b> Both are made to order with a 3 to 6 week lead time, which lands right on 26 Dec.</div>
+  <div class="alert"><b>Before ordering drains,</b> get the outlet sizes and the strip drain length from Luke's plumber.</div>
+  </div>
+
+  <div id="list"></div>
+
+  <div class="foot">
+    <span>Ticks save in this browser only.</span>
+    <button id="reset">Clear ticks</button>
+  </div>
+</div>
+
+<script>
+const DATA = {
+  bathroom: [
+    { step: "1. Tiles", items: [
+      { id:"b1", t:"Floor and towel wall tile", p:"Venice Bianco Matt Concrete Look 600x1200mm (SKU DW-VE-BIANCO-612)", qty:"10 bought", pre:true, n:"Bought from DW Tiles for $860, free shipping. This also covers the laundry floor and leaves spare." },
+      { id:"b2", t:"Vanity wall feature tile", p:"Venice Bianco Matt Concrete Look 3D Capsule 600x1200mm (SKU DW-P-VE3C-BIANCO-612)", qty:"7 bought", pre:true, n:"Bought from DW Tiles for $728, free shipping." },
+      { id:"b3", t:"Shower feature wall", p:"TileCloud Coogee Antique Forest Green Kit Kat Mosaic, 284x295mm sheets", qty:"5 boxes bought", pre:true, flag:"Pick up", n:"Bought for $528.75 after a $176.25 discount. Pick up from TileCloud Warehouse, 34 Rosebery Avenue, Rosebery. Open Monday to Friday 9am to 4:45pm, Saturday 9am to 3:45pm. Check the boxes say gloss when you collect." },
+      { id:"b4", t:"Handmade feature tiles", p:"6 colourful relief-pattern tiles", qty:"6", pre:true, n:"Already bought. Agree placement with Luke." },
+      { id:"b5", t:"Tile edge trims", p:"Antique brass-tone trims for external corners and the window reveal", qty:"TBC", flag:"Ask Luke first", n:"Tilers usually supply these. Ask Luke if trims are in his price and what finish he can get.",
+        buy:[{k:"If you supply",l:"TradieCart trims (Australian)",pr:"Varies",u:"https://www.tradiecart.com.au/roberts"}] }
+    ]},
+    { step: "2. Vanity and mirror", items: [
+      { id:"b6", t:"Vanity, top and basin", p:"Timberline Socoa 750mm, centre bowl, wall hung, white SilkSurface top with above-counter basin, walnut or dark timber finish", pre:true, qty:"1", n:"One product covers cabinet, top and basin. Choose the exact dark woodgrain finish, fluting style (Apollo or Dockland) and handles at order. Handles do not need to match the tapware. A plumbing kit that hides the pipes behind the drawers is included, so no bottle trap is needed.",
+        buy:[{k:"Best price",l:"Designer Bathware (SKU SOC-V-750-C-SSA-W), rated 4.9 from 67 reviews, ships from Melbourne",pr:"$2,882",u:"https://designerbathware.com.au/products/timberline-soccoa-wall-hung-vanity"},
+             {k:"Mid price",l:"Tradelink, Socoa Flat",pr:"from $2,998",u:"https://tradelink.com.au/collections/timberline"},
+             {k:"Bundle",l:"The Blue Space, rated 4.75 from 3,800+ reviews",pr:"$3,174",u:"https://www.thebluespace.com.au/products/timberline-socoa-dockland-wall-hung-vanity-with-above-counter-basin"}] },
+      { id:"b7", t:"Shaving cabinet", p:"Timberline Church 600mm, single door, left hand hinge, same finish as the vanity", pre:true, qty:"1", n:"State left hand hinge when ordering. It has no light or power inside as standard. Ask Luke's electrician for a power point inside it for the toothbrushes. Under-cabinet lighting is an optional extra.",
+        buy:[{k:"Best price + bundle",l:"The Blue Space",pr:"$989",u:"https://www.thebluespace.com.au/products/timberline-church-shaving-cabinet-600mm"},
+             {k:"Alternative",l:"Wellsons, single door",pr:"$1,047",u:"https://www.wellsons.com.au/products/timberline-church-shaving-cabinet-600mm"},
+             {k:"Alternative",l:"Bathware Direct, LH or RH hinge",pr:"$1,059",u:"https://www.bathwaredirect.com.au/products/timberline-church-shaving-cabinet-400mm-sch40"}] },
+      { id:"b8", t:"Basin waste", p:"Yabby Pop Up Waste with Overflow, antique brass", pre:true, qty:"1", flag:"Check basin", n:"In your cart at $62.40. Only right if the Timberline basin has an overflow hole. If it does not, swap to the no-overflow version. Both suit a 45mm drain hole and 32mm trap.",
+        buy:[{k:"In your cart",l:"Yabby, with overflow",pr:"$62.40",u:"https://tilecloud.com.au/products/pop-up-waste-antique-brass-overflow"},
+             {k:"If no overflow",l:"Yabby, no overflow",pr:"See site",u:"https://tilecloud.com.au/products/pop-up-waste-antique-brass-no-overflow"}] }
+    ]},
+    { step: "3. Tapware, Yabby in antique brass", items: [
+      { id:"b9", t:"In-wall basin mixer and spout", p:"Yabby Sydney Wall Spout + Wall Mixer, antique brass", pre:true, qty:"1", n:"In your cart at $244. Ask Luke to set the spout height so it clears the rim of the above-counter basin.",
+        buy:[{k:"In your cart",l:"Yabby",pr:"$244",u:"https://tilecloud.com.au/products/sydney-wall-spout-mixer-antique-brass"}] },
+      { id:"b10", t:"Rain shower and hand shower on a rail", p:"Yabby Gooseneck Combination Shower + Round Sprayer, antique brass", pre:true, qty:"1", n:"In your cart at $752. Rain head, hand shower and rail in one, with the diverter built into the rail. It needs a mixer, below.",
+        buy:[{k:"In your cart",l:"Yabby",pr:"$752",u:"https://tilecloud.com.au/products/gooseneck-combination-shower-round-shower-sprayer-antique-brass"}] },
+      { id:"b11", t:"Shower mixer", p:"Yabby Sydney Wall Mixer, antique brass", qty:"1", flag:"Check your order", n:"The combination shower needs a mixer to turn the water on. Your last cart had none after the diverter mixer came out, so check one is in your order.",
+        buy:[{k:"If missing",l:"Yabby",pr:"See site",u:"https://yabby.com.au"}] },
+      { id:"b12", t:"Heated vertical towel rails", p:"Yabby Heated Towel Rail, antique brass", pre:true, qty:"3", n:"In your cart at $1,108.80 for 3. Luke's 20 Nov quote now includes wiring them (item 3.5).",
+        buy:[{k:"In your cart",l:"Yabby",pr:"$369.60 each",u:"https://tilecloud.com.au/products/heated-towel-rail-antique-brass"}] },
+      { id:"b13", t:"Toilet roll holder", p:"Yabby Sydney Toilet Roll Holder, antique brass", pre:true, qty:"1",
+        buy:[{k:"In your cart",l:"Yabby",pr:"$64",u:"https://yabby.com.au"}] },
+      { id:"b28", t:"Hand towel holder", p:"Yabby Sydney Hand Towel Holder, antique brass", pre:true, qty:"1", n:"In your cart at $78.40. Goes next to the basin where the current power points are.",
+        buy:[{k:"In your cart",l:"Yabby",pr:"$78.40",u:"https://tilecloud.com.au/collections/towel-rails"}] },
+      { id:"b31", t:"Soap bottle holder", p:"Yabby Soap Bottle Holder, antique brass", pre:true, qty:"1", n:"In your cart at $28.",
+        buy:[{k:"In your cart",l:"Yabby",pr:"$28",u:"https://yabby.com.au"}] },
+    ]},
+    { step: "4. Toilet, waiting on Luke", items: [
+      { id:"b15", t:"Toilet suite", p:"Option A, in-wall: Caroma Urbane II Cleanflush Wall Faced Invisi Series II. Option B, exposed: Caroma Urbane II Cleanflush Wall Faced close coupled", qty:"1", flag:"Waiting on Luke", n:"The in-wall cistern needs a wall cavity of at least 90mm. That is the number to give Luke.",
+        buy:[{k:"Option A, in-wall",l:"The Blue Space",pr:"$943",u:"https://www.thebluespace.com.au/products/caroma-urbane-ii-cleanflush-wall-faced-invisi-series-ii-toilet-suite"},
+             {k:"Option A, in-wall",l:"Buildmat",pr:"$943",u:"https://www.buildmat.com.au/products/urbane-ii-cleanflush-invisi-series-ii-wall-faced-suite-back-entry"},
+             {k:"Option B, exposed",l:"The Blue Space range page",pr:"$689",u:"https://www.thebluespace.com.au/products/caroma-urbane-ii-cleanflush-wall-faced-invisi-series-ii-toilet-suite"}] },
+      { id:"b16", t:"Flush button", p:"Flush button to suit the toilet, as close to antique brass as you can find", qty:"1", flag:"Decide with toilet", n:"Only needed for an in-wall cistern. Caroma has no antique brass button, so check the finishes when you choose the toilet. The budget holds $416 for now." },
+      { id:"b20", t:"Parts in the toilet box", p:"Soft close seat, pan connector, rough-in and fit-out kits", qty:"Included", n:"Nothing to buy. These come with the Urbane II suite. Listed so you can check the box." }
+    ]},
+    { step: "5. Drains and wastes", items: [
+      { id:"b18", t:"Shower strip drain", p:"Tile insert strip drain, supplied by Luke (item 9.6)", qty:"1", n:"Nothing to buy. Luke supplies it with 2 tile insert floor wastes. He may cut it on site if the existing floor waste is not centred. Tick once it is in the signed quote." },
+      { id:"b21", t:"Bathroom floor waste", p:"Tile insert floor waste, supplied by Luke (item 9.6)", qty:"1", n:"Nothing to buy. If you still have the Yabby antique brass floor waste in your cart, remove it." },
+      { id:"b22", t:"Basin waste", p:"Listed under the vanity, step 2", qty:"See step 2", n:"Tick this once the Yabby pop-up waste in step 2 is bought." },
+      { id:"b23", t:"Toilet waste", p:"Pan connector to the existing waste pipe", qty:"Included", n:"Comes with the toilet suite. Luke's plumber connects it." }
+    ]},
+    { step: "6. Luke supplies, you confirm or choose", items: [
+      { id:"b29", t:"Shower ledge along the window", p:"Tiled ledge along the window wall in the shower, about 1200mm high x 1500mm wide, built by Luke (item 5.1)", qty:"1", n:"Nothing to buy. Now in Luke's 20 Nov quote. Ask Luke to frame, waterproof and tile it with a slight fall so water runs off, and to confirm the top finish and edge trim. Check the 5 boxes of Kit Kat cover the ledge as well as the back wall."},
+      { id:"b17", t:"Shower screen", p:"Frameless 10mm fixed panel in fluted glass (item 17.1)", qty:"1", n:"Now in Luke's 20 Nov quote as a fluted fixed panel. Tick once you sign." },
+      { id:"b19", t:"Exhaust fan", p:"Exhaust fan ducted outside (item 3.4)", qty:"1", n:"Tick once ducting is in the quote." },
+      { id:"b30", t:"Wall lights", p:"Dawn Lighting 120mm orb wall lights, one either side of the shaving cabinet", qty:"2", n:"Luke is supplying and wiring them on their own switch. Tick once the supply cost is in his updated quote."},
+      { id:"b24", t:"Downlights", p:"3 LED downlights (item 3.3)", qty:"3", n:"Ask for warm white and a wet-area rating." },
+      { id:"b25", t:"Power points and switches", p:"Power point at the vanity, power inside the mirror cabinet, light and fan switch", qty:"Per quote", n:"Choose the plate colour. Confirm the power point inside the Church cabinet is included." },
+      { id:"b26", t:"Grout and silicone colours", p:"One colour each for the Bianco, the Capsule and the Kit Kat", qty:"3 choices", flag:"Decide", n:"Luke supplies these, but you pick the colours. Ask for samples against the tiles before he orders." },
+      { id:"b27", t:"Waterproofing, sheeting, adhesive, pipes", p:"All building materials", qty:"Per quote", n:"Nothing to buy. Confirm the copper pipe option and the floor sheeting options are in the signed quote." }
+    ]}
+  ],
+  laundry: [
+    { step: "1. Tiles", items: [
+      { id:"l1", t:"Floor tile", p:"Venice Bianco Matt 600x1200mm, same as the bathroom", qty:"Covered", pre:true, n:"Covered by the 10 bought from DW Tiles." }
+    ]},
+    { step: "2. Joinery", items: [
+      { id:"l2", t:"Joinery colour", p:"Pick the polyurethane colour for the floor-to-ceiling cabinets and pocket doors", qty:"n/a", flag:"Decide", n:"A decision, not a purchase. Luke supplies the joinery: 700mm deep, wall cabinets and open shelves." },
+      { id:"l3", t:"Laundry door handles", p:"Handles or pulls for two hinged doors (pocket doors dropped)", qty:"2", flag:"Waiting on joinery", n:"Luke's joiner is still confirming the laundry design. Check whether handles are included, and match them to the Yabby antique brass if you buy your own." },
+    ]},
+    { step: "3. Plumbing and power", items: [
+      { id:"l4", t:"Washing machine taps", p:"Hot and cold washing machine stop taps", qty:"1 set", n:"Luke's plumber supplies. Hidden behind the doors, so standard is fine. Confirm it is in his scope." },
+      { id:"l7", t:"Washing machine drain", p:"Waste outlet in the wall for the washing machine hose", qty:"1", flag:"Confirm with Luke", n:"With the tub removed, the machine needs its own drain point. Luke's plumber supplies and fits it. Make sure it is written into the quote." },
+      { id:"l8", t:"Laundry floor waste", p:"Floor drain in the laundry. Standard from Luke, or a Yabby Tile Insert Floor Waste in antique brass to match", qty:"1", flag:"Confirm with Luke", n:"Ask Luke whether the laundry has, or needs, a floor waste. It sits inside the cupboard, so a standard one is fine.",
+        buy:[{k:"If you want it to match",l:"Yabby",pr:"$148 before sale",u:"https://tilecloud.com.au/products/tile-insert-floor-waste-antique-brass"}] },
+      { id:"l9", t:"Power points", p:"2 double power points for the washer and dryer", qty:"2", n:"In Luke's quote. Nothing to buy." },
+      { id:"l5", t:"Dryer check", p:"Confirm your dryer works behind closed doors", qty:"n/a", n:"A vented dryer needs airflow. A heat pump or condenser dryer avoids the issue. Only buy a new one if replacing." }
+    ]},
+    { step: "4. Extras, optional", items: [
+      { id:"l6", t:"Hanging and drying", p:"Hanging rail or pull-out drying rack inside the cupboard", qty:"1", n:"Tell Luke before the joinery is made so he can build it in." }
+    ]}
+  ]
+};
+
+const KEY = "reno-checklist-v2";
+let state = {};
+try { state = JSON.parse(localStorage.getItem(KEY)) || {}; } catch(e) { state = {}; }
+Object.values(DATA).flat().forEach(g => g.items.forEach(i => { if (i.pre && !state["_p_"+i.id]) { state[i.id] = true; state["_p_"+i.id] = 1; } }));
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch(e) {} };
+
+let room = "bathroom";
+try { if (location.hash === "#laundry") room = "laundry"; if (location.hash === "#budget") room = "budget"; } catch(e) {}
+
+const $ = n => "$" + Math.round(n).toLocaleString("en-AU");
+const BUDGET = [
+  { h:"1. Luke's Renovations, quote Q1173 dated 20 Nov", rows:[
+    ["Quoted price", "$54,265.00 plus $5,426.50 GST. One lump sum, valid 30 days. Up $4,169 on the 4 Nov quote", 59691.50],
+    ["1.1 Floor protection", "Access paths and adjacent rooms for the whole job", null],
+    ["2.1 Demolition", "Both rooms: tiles, screed to 50mm, laundry joinery, fixtures, removal and disposal", null],
+    ["3.1 to 3.6 Electrician", "2 bathroom power points (1 inside the shaving cabinet), 2 double power points in the laundry, 2 gang switch, 3 LED downlights, standard exhaust fan (ducting not included), wiring for 3 heated towel rails and 2 wall lights", null],
+    ["4.1 to 4.4 Plumber", "Rough-in for shower mixer, in-wall cistern and wall hung vanity. Fit-off of all your fixtures. Install of 6 accessories. All in-wall pipes replaced with copper", null],
+    ["5.1, 6.1 Carpentry and plaster", "Shower ledge along the window wall, about 1200 x 1500mm, sheeted in villaboard", null],
+    ["7.1 Renderer", "Bathroom walls patched, levelled and made ready for tiling", null],
+    ["8.1, 8.2 Waterproofing", "Both rooms. 2 coats, shower walls to 2100mm, certificate on completion", null],
+    ["9.1 to 9.5 Tiler", "Screed with falls, wall tiles floor to ceiling, floor tiles in both rooms, feature tiles, and an allowance for 60x120 tiles", null],
+    ["9.6 Drains", "Supply of 1 tile insert strip drain and 2 tile insert floor wastes", null],
+    ["10.1 Caulking", "All tiled perimeters", null],
+    ["11.1 Laundry joinery", "Still the old pocket door design. Waiting on the joiner to confirm the new layout", null],
+    ["13.1, 14.1 Rubbish and final clean", "One rubbish removal and a full clean", null],
+    ["15.1 Home warranty insurance", "HBCF, required for jobs over $20k", null],
+    ["16.1 Project management", "Trade coordination, scheduling and communication", null],
+    ["17.1 Shower screen", "Frameless 10mm fluted fixed panel, about 900 to 1000mm wide", null],
+    ["18.1 Painting", "Ceiling, door, frame and repaired wall", null]
+  ]},
+  { h:"2. Tiles, bought", rows:[
+    ["Venice Bianco Matt 600x1200 x 10", "DW Tiles, paid. Covers bathroom floor, towel wall and laundry floor", 860],
+    ["Venice Bianco 3D Capsule 600x1200 x 7", "DW Tiles, paid", 728],
+    ["Coogee Forest Green Kit Kat x 5 boxes", "TileCloud, paid, $176.25 discount applied. Pick up from Rosebery", 528.75],
+    ["Handmade feature tiles", "6 tiles, already bought", 0]
+  ]},
+  { h:"3. Vanity and mirror", rows:[
+    ["Timberline Socoa 750 with top and basin", "Designer Bathware. $3,174 at The Blue Space", 2882],
+    ["Timberline Church 600 shaving cabinet", "1 door, left hand hinge, The Blue Space", 989]
+  ]},
+  { h:"4. Tapware and shower, Yabby antique brass", rows:[
+    ["Sydney Wall Spout + Wall Mixer", "Basin. In cart", 244],
+    ["Gooseneck Combination Shower + Round Sprayer", "Rain head and hand shower on a rail. In cart", 752],
+    ["Sydney Wall Mixer", "Shower. Price not confirmed, diverter mixer price used for now", 296]
+  ]},
+  { h:"5. Accessories, Yabby antique brass", rows:[
+    ["Heated vertical towel rails x 3", "$369.60 each. In cart", 1108.80],
+    ["Sydney Toilet Roll Holder", "In cart", 64],
+    ["Sydney Hand Towel Holder", "In cart", 78.40],
+    ["Soap Bottle Holder", "In cart", 28]
+  ]},
+  { h:"6. Wastes and lights", rows:[
+    ["Pop up waste, no overflow", "Yabby, in cart", 62.40],
+    ["Dawn Lighting 120mm orb wall lights x 2", "Luke supplies. Cost to be added to his quote", "TBC"]
+  ]},
+  { h:"7. Toilet", rows:[
+    ["Urbane II Cleanflush in-wall suite", "The Blue Space. The exposed cistern version is $689", 943],
+    ["Flush button", "Placeholder at Caroma RRP. Only for in-wall. Finish to match antique brass", 416]
+  ]},
+  { h:"8. Laundry hardware", rows:[
+    ["Laundry door handles", "Allowance for 2 hinged doors. Waiting on the joinery design", 179.40]
+  ]}
+];
+const EXTRAS = [
+  ["Bedroom wall repair", "Item 19.3, repair and painting, to be confirmed", "$500 to $2,000"],
+  ["Laundry floor sheeting", "Item 19.1, $1,200 plus GST. Only if particleboard is found", "$1,320"],
+  ["Bathroom floor sheeting", "Item 19.2, $3,000 plus GST. Only if needed once tiles are up", "$3,300"],
+  ["New bathroom ceiling", "From Luke's email, not in the quote. Only if needed", "$2,000"],
+  ["Exhaust fan ducting", "Not priced yet", "TBC"],
+  ["In-wall cistern framing", "Waiting on Luke's answer", "TBC"],
+  ["Tile edge trims", "May be in Luke's price", "TBC"],
+  ["Delivery charges on fittings", "Tiles had free shipping. Vanity and tapware not quoted yet", "TBC"],
+  ["Laundry joinery changes", "Hinged doors and new layout. Luke to update item 11.1", "TBC"]
+];
+function renderBudget(){
+  const sums = BUDGET.map(s => s.rows.reduce((a,r) => a + (typeof r[2] === "number" ? r[2] : 0), 0));
+  const total = sums.reduce((a,b) => a + b, 0);
+  const supply = total - sums[0];
+  const target = 65000;
+  document.getElementById("list").innerHTML = `
+    <div class="big">
+      <div><b>${$(total)}</b><span>Known costs, including GST</span></div>
+      <div><b>${$(Math.abs(target-total))} ${total > target ? "over" : "under"}</b><span>Against your $65,000 budget</span></div>
+      <div><b>${$(sums[0])}</b><span>Luke's 20 Nov quote</span></div>
+      <div><b>${$(supply)}</b><span>Tiles (paid) and fittings you supply</span></div>
+    </div>
+    <div class="alert"><b>Not in the total yet:</b> the bedroom wall repair ($500 to $2,000) and up to $6,620 of work that is only needed if problems are found. See the last table.</div>
+    ${BUDGET.map((s,i) => `<h2>${s.h}<span>${$(sums[i])}</span></h2><table class="bt">${s.rows.map(r => `<tr><td>${r[0]}<small>${r[1]}</small></td><td>${r[2] === null ? "In price" : (typeof r[2] === "string" ? r[2] : (r[2] === 0 ? "Paid" : $(r[2])))}</td></tr>`).join("")}</table>`).join("")}
+    <h2>9. Extras and unknowns<span>Not in total</span></h2>
+    <table class="bt">${EXTRAS.map(r => `<tr><td>${r[0]}<small>${r[1]}</small></td><td>${r[2]}</td></tr>`).join("")}</table>
+    <h2>10. When you pay Luke<span>${$(55522.5)}</span></h2>
+    <table class="bt">${[["Deposit to secure the booking",10],["After demolition",30],["After plumbing, electrical and wall preparation",30],["After tiling is complete",25],["On completion and fit-off",5]].map(r => `<tr><td>${r[0]}<small>${r[1]}% of the quoted price</small></td><td>${"$"+(55522.5*r[1]/100).toLocaleString("en-AU",{minimumFractionDigits:2,maximumFractionDigits:2})}</td></tr>`).join("")}</table>
+    <p class="n">Luke's quote is one lump sum, so the included lines show scope, not separate prices. Upgrades and variations are paid on top of the schedule above. The quote is valid for 30 days from 4 Nov. Retail prices were checked on 14 Nov 2026 and exclude delivery.</p>`;
+}
+
+function render(){
+  document.querySelectorAll(".tab").forEach(b => b.classList.toggle("on", b.dataset.room === room));
+  const isB = room === "budget";
+  document.getElementById("chk").style.display = isB ? "none" : "";
+  document.querySelector(".foot").style.display = isB ? "none" : "";
+  if (isB) { renderBudget(); return; }
+  const groups = DATA[room];
+  const all = groups.flatMap(g => g.items);
+  const done = all.filter(i => state[i.id]).length;
+  document.getElementById("count").textContent = `${done} of ${all.length}`;
+  document.getElementById("fill").style.width = (100*done/all.length) + "%";
+  document.getElementById("list").innerHTML = groups.map(g => {
+    const d = g.items.filter(i => state[i.id]).length;
+    return `<h2>${g.step}<span>${d}/${g.items.length}</span></h2>` + g.items.map(i => `
+      <div class="item ${state[i.id] ? "done" : ""}">
+        <input type="checkbox" aria-label="${i.t}" data-id="${i.id}" ${state[i.id] ? "checked" : ""}>
+        <div class="main">
+          <div class="t">${i.t}</div>
+          <div class="p">${i.p}</div>
+          <div class="meta"><span class="chip">Qty: ${i.qty}</span>${i.flag ? `<span class="chip flag">${i.flag}</span>` : ""}</div>
+          ${i.buy ? `<div class="buy">${i.buy.map(b => `<a href="${b.u}" target="_blank" rel="noopener"><span><span class="k">${b.k}</span>${b.l}</span><span class="pr">${b.pr}</span></a>`).join("")}</div>` : ""}
+          ${i.n ? `<div class="n">${i.n}</div>` : ""}
+        </div>
+      </div>`).join("");
+  }).join("");
+}
+
+document.getElementById("list").addEventListener("change", e => {
+  const id = e.target.dataset.id; if (!id) return;
+  state[id] = e.target.checked; save(); render();
+});
+document.querySelectorAll(".tab").forEach(b => b.addEventListener("click", () => {
+  room = b.dataset.room;
+  try { history.replaceState(null, "", "#" + room); } catch(e) {}
+  render();
+}));
+document.getElementById("reset").addEventListener("click", () => {
+  DATA[room].flatMap(g => g.items).forEach(i => { state[i.id] = false; }); save(); render();
+});
+render();
+</script>
+</body>
+</html>
